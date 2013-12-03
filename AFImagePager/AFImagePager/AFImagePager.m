@@ -11,6 +11,7 @@
 #define kOverlayHeight      15
 
 #import "AFImagePager.h"
+#import "UIImageView+Yappem.h"
 
 @interface AFImagePager () <UIScrollViewDelegate>
 {
@@ -152,7 +153,7 @@
             [imageView setBackgroundColor:[UIColor clearColor]];
             [imageView setContentMode:[_dataSource contentModeForImage:i]];
             [imageView setTag:i];
-            [imageView setImageWithURL:[NSURL URLWithString:(NSString *)[aImageUrls objectAtIndex:i]]];
+            [imageView yappemSetImageWithURL:[NSURL URLWithString:(NSString *)[aImageUrls objectAtIndex:i]]];
             
             // Add GestureRecognizer to ImageView
             UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc]
