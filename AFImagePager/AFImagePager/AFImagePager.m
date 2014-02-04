@@ -27,6 +27,7 @@
 
     NSTimer *_slideshowTimer;
     NSUInteger _slideshowTimeInterval;
+    BOOL _initialized;
 }
 @end
 
@@ -79,12 +80,16 @@
 #pragma mark - General
 - (void) initialize
 {
-    self.clipsToBounds = YES;
-    [self initializeScrollView];
-    [self initializePageControl];
-    if(!_indicatorDisabled)
-        [self initalizeImageCounter];
-    [self loadData];
+    if (!_initialized) {
+        self.clipsToBounds = YES;
+        [self initializeScrollView];
+        [self initializePageControl];
+        if(!_indicatorDisabled)
+            [self initalizeImageCounter];
+        [self loadData];
+        _initialized = YES;
+    }
+
 }
 
 - (UIColor *) randomColor
