@@ -153,7 +153,13 @@
             [imageView setBackgroundColor:[UIColor clearColor]];
             [imageView setContentMode:[_dataSource contentModeForImage:i]];
             [imageView setTag:i];
-            [imageView yappemSetImageWithURL:[NSURL URLWithString:(NSString *)[aImageUrls objectAtIndex:i]]];
+            NSString *imageSource = [aImageUrls objectAtIndex:i];
+            if (![imageSource hasPrefix:@"https://"] && ![imageSource hasPrefix:@"http://"]) {
+                imageView.image = [UIImage imageNamed:imageSource];
+            }
+            else {
+                [imageView yappemSetImageWithURL:[NSURL URLWithString:imageSource]];
+            }
             
             // Add GestureRecognizer to ImageView
             UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc]
@@ -207,7 +213,9 @@
     _pageControl = [[UIPageControl alloc] initWithFrame:pageControlFrame];
     _pageControl.center = CGPointMake(_scrollView.frame.size.width/2, _scrollView.frame.size.height - 12);
     _pageControl.userInteractionEnabled = NO;
-    [self addSubview:_pageControl];
+    if (!_indicatorDisabled) {
+        [self addSubview:_pageControl];
+    }
 }
 
 #pragma mark - ScrollView Delegate;
