@@ -43,5 +43,9 @@
 
 - (void) reloadData;
 
+// Slideshow
+@property (assign) NSUInteger slideshowTimeInterval; // Defaults 0.0f (off)
+@property (assign) BOOL slideshowShouldCallScrollToDelegate; // Defaults YES
+
 @end
 

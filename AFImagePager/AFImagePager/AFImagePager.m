@@ -24,6 +24,9 @@
     UIView *_indicatorBackground;
     
     BOOL _indicatorDisabled;
+
+    NSTimer *_slideshowTimer;
+    NSUInteger _slideshowTimeInterval;
 }
 @end
 
@@ -222,6 +225,50 @@
 - (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     _pageControl.currentPage = lround((float)scrollView.contentOffset.x / scrollView.frame.size.width);
+}
+
+
+#pragma mark - Slideshow
+- (void) slideshowTick:(NSTimer *)timer
+{
+    NSUInteger nextPage = 0;
+    if([_pageControl currentPage] < ([[_dataSource arrayWithImages] count] - 1)) {
+        nextPage = [_pageControl currentPage] + 1;
+    }
+    
+    [_scrollView scrollRectToVisible:CGRectMake(self.frame.size.width * nextPage, 0, self.frame.size.width, self.frame.size.width) animated:YES];
+    [_pageControl setCurrentPage:nextPage];
+    
+    [self updateCaptionLabelForImageAtIndex:nextPage];
+    
+    if (self.slideshowShouldCallScrollToDelegate) {
+        [self fireDidScrollToIndexDelegateForPage:nextPage];
+    }
+}
+
+- (void) checkWetherToToggleSlideshowTimer
+{
+    if (_slideshowTimeInterval > 0) {
+        if ([(NSArray *)[_dataSource arrayWithImages] count] > 1) {
+            _slideshowTimer = [NSTimer scheduledTimerWithTimeInterval:_slideshowTimeInterval target:self selector:@selector(slideshowTick:) userInfo:nil repeats:YES];
+        }
+    }
+}
+
+#pragma mark - Setter / Getter
+- (void) setSlideshowTimeInterval:(NSUInteger)slideshowTimeInterval
+{
+    _slideshowTimeInterval = slideshowTimeInterval;
+    
+    if([_slideshowTimer isValid]) {
+        [_slideshowTimer invalidate];
+    }
+    [self checkWetherToToggleSlideshowTimer];
+}
+
+- (NSUInteger) slideshowTimeInterval
+{
+    return _slideshowTimeInterval;
 }
 
 @end
