@@ -162,6 +162,7 @@
             }
             else {
                 [imageView yappemSetImageWithURL:[NSURL URLWithString:imageSource]];
+                //[imageView setImageWithURL:[NSURL URLWithString:imageSource]];
             }
             
             // Add GestureRecognizer to ImageView
@@ -232,24 +233,18 @@
 - (void) slideshowTick:(NSTimer *)timer
 {
     NSUInteger nextPage = 0;
-    if([_pageControl currentPage] < ([[_dataSource arrayWithImages] count] - 1)) {
+    if([_pageControl currentPage] < ([[_dataSource arrayWithImageUrlStrings] count] - 1)) {
         nextPage = [_pageControl currentPage] + 1;
     }
     
     [_scrollView scrollRectToVisible:CGRectMake(self.frame.size.width * nextPage, 0, self.frame.size.width, self.frame.size.width) animated:YES];
     [_pageControl setCurrentPage:nextPage];
-    
-    [self updateCaptionLabelForImageAtIndex:nextPage];
-    
-    if (self.slideshowShouldCallScrollToDelegate) {
-        [self fireDidScrollToIndexDelegateForPage:nextPage];
-    }
 }
 
 - (void) checkWetherToToggleSlideshowTimer
 {
     if (_slideshowTimeInterval > 0) {
-        if ([(NSArray *)[_dataSource arrayWithImages] count] > 1) {
+        if ([(NSArray *)[_dataSource arrayWithImageUrlStrings] count] > 1) {
             _slideshowTimer = [NSTimer scheduledTimerWithTimeInterval:_slideshowTimeInterval target:self selector:@selector(slideshowTick:) userInfo:nil repeats:YES];
         }
     }
